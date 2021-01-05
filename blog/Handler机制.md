@@ -133,19 +133,19 @@ public void dispatchMessage(Message msg) {
 ```
 
 # 问题
-## Looper.loop()中MessageQueue.next()取延时消息时，都在主线程中使用了死循环为什么不会卡死？
+### Looper.loop()中MessageQueue.next()取延时消息时，都在主线程中使用了死循环为什么不会卡死？
 
 MessageQueue在取消息时，如果是延时消息会计算得到延时时长，再次循环时会执行nativePollOnce阻塞线程相应的时长。阻塞之后被唤醒的时机是阻塞时间到；或有新的消息添加进队列后，在enqueueMessage方法中调用nativeWake来唤醒阻塞线程。
 
-## MessageQueue是什么数据结构
+### MessageQueue是什么数据结构
 MessageQueue并不是队列，而是[链表结构](https://github.com/xcy396/ComputerYogurt/issues/5#issuecomment-716344691)
 
-## Handler的postDelay,时间准吗?为什么?它用的是system.currentTime吗？
+### Handler的postDelay,时间准吗?为什么?它用的是system.currentTime吗？
 1、不准
 2、因为Looper里从MessageQueue里取出来的消息执行也是串行的。如果前一个消息是比较耗时的，那么等到执行之前延时的消息时，时间难免可能会超过延时的时间。
 3、postDelay时用的是System.uptimeMillis，也就是开机时间。因为系统时间用户可以手动更改，故使用开机时间。
 
-## 子线程run方法中使用Handler
+### 子线程run方法中使用Handler
 1、首先在子线程中调用Looper.prepare()方法初始化子线程的Looper（会同时初始化MessageQueue）
 2、在子线程中调用Looper.loop()方法启动消息循环
 3、创建Handler将子线程的Looper对象和Handler绑定，就可以使用子线程的Handler了
